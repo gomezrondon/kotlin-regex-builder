@@ -1,6 +1,7 @@
 
 
 import RegEx.Companion.addToRange
+import RegEx.Companion.range
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test;
 
@@ -149,7 +150,7 @@ class Test {
 
 
         val buildRegExp = RegEx()
-            .wordBoundary(RegEx().range(RegEx.LETTERS_UPPER_CASE + RegEx.LETTERS_LOWER_CASE + addToRange(RegEx("'"))).oneOrMore())
+            .wordBoundary(range(RegEx.LETTERS_UPPER_CASE , RegEx.LETTERS_LOWER_CASE , addToRange(RegEx("'"))).oneOrMore())
             .ahead(",")
             .buildRegExp()
 
@@ -181,12 +182,12 @@ class Test {
     fun testLookBehind() {
 
         val buildRegExp = RegEx()
-            .behind(RegEx().range("tT").letter("he"))
+            .behind(range("tT").letter("he"))
             .anyLetter()
             .buildRegExp()
 
         val find = RegEx()
-            .behind(RegEx().range("tT").letter("he"))
+            .behind(range("tT").letter("he"))
             .anyLetter()
             .findAll(temStr)
 

@@ -42,6 +42,17 @@ class RegEx(value: String="" ){
          fun addToRange(value:RegEx):String {
              return RegEx(value).regExp
          }
+
+         /**
+          * for simple values
+          */
+         fun range(vararg strings: String): RegEx {
+             var add = ""
+             for (valor in strings)
+                 add +=valor
+
+             return RegEx("""[$add]""")
+         }
     }
 
     init {
@@ -78,13 +89,7 @@ class RegEx(value: String="" ){
         return this
     }
 
-    /**
-     * for simple values
-     */
-    fun range(value:String): RegEx {
-        range(RegEx().letter(value))
-        return this
-    }
+
 
 
 
