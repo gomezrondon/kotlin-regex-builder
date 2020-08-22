@@ -5,29 +5,23 @@
 fun main() {
 
     //---------------
-    val term = """
-        123-456-7890
-        123 456 7890
-        (123) 456 7890
+   val term = """
+        some.email@gmail.com
+        1254pepepe@yahoo.edu
+        corpoService@ivm.net
     """.trimIndent()
-    val separator = RegEx().letter(" -").optional()
-    val areaCodeOpen = RegEx().literal("(").optional()
-    val areaCodeClose = RegEx().literal(")").optional()
-    val ThreeDigits = RegEx().digit().repeat(3)
-    val fourDigits = RegEx().digit().repeat(4)
 
-    val find =
-            RegEx(RegEx().setBetween(areaCodeOpen,ThreeDigits,areaCodeClose))
-            .range(separator)
-            .chain(ThreeDigits)
-            .range(separator)
-            .chain(fourDigits)
+    val find = RegEx()
+            .anyAtoZLetter().moreThanOne()
+            .letter("@")
+            .anyAtoZLetter().moreThanOne()
+            .literal(".")
+            .group(RegEx("com").or().letter("edu").or().letter("net"))
             .printReg()
             .findAll(term)
     println(find)
-//       \d{3}[ -?]\d{3}[ -?]\d{4}
- //   \(?\d{3}\)?[ -?]\d{3}[ -?]\d{4}
-//    [123-456-7890, 123 456 7890]
+//    [a-zA-Z]+@[a-zA-Z]+\.(com|edu|net)
+//    [email@gmail.com, pepepe@yahoo.edu, corpoService@ivm.net]
 }
 
 /**
@@ -89,22 +83,22 @@ class RegEx(value: String="" ){
     }
 
     fun anyAtoZLowCase(): RegEx {
-        regExp += range(RegEx().letter(LETTERS_LOWER_CASE)).regExp
+        regExp += RegEx().range(RegEx().letter(LETTERS_LOWER_CASE)).regExp
         return this
     }
 
     fun anyAtoZUpperCase(): RegEx {
-        regExp += range(RegEx().letter(LETTERS_UPPER_CASE)).regExp
+        regExp += RegEx().range(RegEx().letter(LETTERS_UPPER_CASE)).regExp
         return this
     }
 
     fun anyAtoZLetter(): RegEx {
-        regExp += range(RegEx().letter(LETTERS_LOWER_CASE+LETTERS_UPPER_CASE)).regExp
+        regExp += RegEx().range(RegEx().letter(LETTERS_LOWER_CASE+LETTERS_UPPER_CASE)).regExp
         return this
     }
 
     fun anyDigit(): RegEx {
-        regExp += range(RegEx().letter(DIGITS)).regExp
+        regExp += RegEx().range(RegEx().letter(DIGITS)).regExp
         return this
     }
 
@@ -364,3 +358,28 @@ class RegEx(value: String="" ){
 //    \d{3}[ -?]\d{3}[ -?]\d{4}
 //    [123-456-7890, 123 456 7890]
 */
+
+//---------------
+/*    val term = """
+        123-456-7890
+        123 456 7890
+        (123) 456 7890
+    """.trimIndent()
+    val separator = RegEx().letter(" -").optional()
+    val areaCodeOpen = RegEx().literal("(").optional()
+    val areaCodeClose = RegEx().literal(")").optional()
+    val ThreeDigits = RegEx().digit().repeat(3)
+    val fourDigits = RegEx().digit().repeat(4)
+
+    val find =
+            RegEx(RegEx().setBetween(areaCodeOpen,ThreeDigits,areaCodeClose))
+            .range(separator)
+            .chain(ThreeDigits)
+            .range(separator)
+            .chain(fourDigits)
+            .printReg()
+            .findAll(term)
+    println(find)
+//       \d{3}[ -?]\d{3}[ -?]\d{4}
+ //   \(?\d{3}\)?[ -?]\d{3}[ -?]\d{4}
+//    [123-456-7890, 123 456 7890]*/
