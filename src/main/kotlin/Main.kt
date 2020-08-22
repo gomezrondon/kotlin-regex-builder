@@ -12,9 +12,9 @@ fun main() {
     """.trimIndent()
 
     val find = RegEx()
-            .anyAtoZLetter().moreThanOne()
+            .anyAtoZLetter().oneOrMore()
             .letter("@")
-            .anyAtoZLetter().moreThanOne()
+            .anyAtoZLetter().oneOrMore()
             .literal(".")
             .group(RegEx("com").or().letter("edu").or().letter("net"))
             .printReg()
@@ -135,7 +135,7 @@ class RegEx(value: String="" ){
         return this
     }
 
-    fun moreThanOne(): RegEx {
+    fun oneOrMore(): RegEx {
         regExp += """+"""
         return this
     }
