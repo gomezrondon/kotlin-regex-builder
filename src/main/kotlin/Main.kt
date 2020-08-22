@@ -4,76 +4,49 @@
 
 fun main() {
 
-    //--------------- look behind
-/*    val temStr2 = """
-        the fat cat ran down the street.
-        it was searching for a mouse to eat.
-    """.trimIndent()
-    val find = RegEx()
-            //.behind(RegEx().range(RegEx().letter("tT")).letter("he"))
-            .behind(RegEx().range("tT").letter("he")) // simple version
-            .anyLetter()
-            .printReg()
-            .findAll(temStr2)
-    println(find)
-//    (?<=[tT]he).
-//    [ ,  ]*/
-
-/*    //--------------- look behind
-    val temStr2 = """
-        the fat cat ran down the street.
-        it was searching for a mouse to eat.
-    """.trimIndent()
-    val find = RegEx()
-            .anyLetter()
-            .ahead(RegEx().letter("at")) // more complex values
-            //.ahead("at") // for simple values
-            .printReg()
-            .findAll(temStr2)
-    println(find)
-            .(?=at)
-    [f, c, e]*/
-    //--------------- look ahead
-/*    val temStr2 = """
-        the fat cat ran down the street.
-        it was searching for a mouse to eat.
-    """.trimIndent()
-    val find = RegEx()
-            .anyLetter()
-            .ahead("at")
-            .printReg()
-            .findAll(temStr2)
-    println(find)*/
-
-    val temStr2 = """
+    //---------------
+    val term = """
         123-456-7890
         123 456 7890
     """.trimIndent()
-    val find = RegEx()
+    val separator = RegEx().letter(" -").optional()
+
+    val TreeDigits = RegEx()
             .digit().repeat(3)
-            .range(RegEx().letter(" -").optional())
-            .digit().repeat(3)
-            .range(RegEx().letter(" -").optional())
+
+    val find = RegEx(TreeDigits)
+            .range(separator)
+            .chain(TreeDigits)
+            .range(separator)
             .digit().repeat(4)
             .printReg()
-            .findAll(temStr2)
+            .findAll(term)
     println(find)
 //    \d{3}[ -?]\d{3}[ -?]\d{4}
 //    [123-456-7890, 123 456 7890]
-
-
 }
 
 /**
  * build a regexp that find elements between to values
  */
-class RegEx(){
+class RegEx(value: String="" ){
+
+    constructor(value2: RegEx) : this(value2.regExp )
 
    private var regExp=""
    private val bucarTodo= ".*"
    private val LETTERS_LOWER_CASE="a-z"
    private val LETTERS_UPPER_CASE="A-Z"
    private val DIGITS="0-9"
+
+    init {
+        this.regExp = value
+    }
+
+    fun chain(value:RegEx): RegEx {
+        regExp += value.regExp
+        return this
+    }
 
     fun group(value:RegEx): RegEx {
         regExp += """(${value.regExp})"""
@@ -323,3 +296,62 @@ class RegEx(){
     println(find)
     (?<=[tT]he).
     [ ,  ]*/
+
+//--------------- look behind
+/*    val temStr2 = """
+        the fat cat ran down the street.
+        it was searching for a mouse to eat.
+    """.trimIndent()
+    val find = RegEx()
+            //.behind(RegEx().range(RegEx().letter("tT")).letter("he"))
+            .behind(RegEx().range("tT").letter("he")) // simple version
+            .anyLetter()
+            .printReg()
+            .findAll(temStr2)
+    println(find)
+//    (?<=[tT]he).
+//    [ ,  ]*/
+
+/*    //--------------- look behind
+    val temStr2 = """
+        the fat cat ran down the street.
+        it was searching for a mouse to eat.
+    """.trimIndent()
+    val find = RegEx()
+            .anyLetter()
+            .ahead(RegEx().letter("at")) // more complex values
+            //.ahead("at") // for simple values
+            .printReg()
+            .findAll(temStr2)
+    println(find)
+            .(?=at)
+    [f, c, e]*/
+//--------------- look ahead
+/*    val temStr2 = """
+        the fat cat ran down the street.
+        it was searching for a mouse to eat.
+    """.trimIndent()
+    val find = RegEx()
+            .anyLetter()
+            .ahead("at")
+            .printReg()
+            .findAll(temStr2)
+    println(find)*/
+//---------------
+/*
+    val temStr2 = """
+        123-456-7890
+        123 456 7890
+    """.trimIndent()
+    val find = RegEx()
+            .digit().repeat(3)
+            .range(RegEx().letter(" -").optional())
+            .digit().repeat(3)
+            .range(RegEx().letter(" -").optional())
+            .digit().repeat(4)
+            .printReg()
+            .findAll(temStr2)
+    println(find)
+//    \d{3}[ -?]\d{3}[ -?]\d{4}
+//    [123-456-7890, 123 456 7890]
+*/
