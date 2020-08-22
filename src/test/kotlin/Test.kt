@@ -1,7 +1,13 @@
 
 
 import RegEx.Companion.addToRange
+import RegEx.Companion.digit
+import RegEx.Companion.group
+import RegEx.Companion.letter
+import RegEx.Companion.literal
 import RegEx.Companion.range
+import RegEx.Companion.setBetween
+import RegEx.Companion.wordBoundary
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test;
 
@@ -19,11 +25,27 @@ class Test {
     """.trimIndent()
 
     @Test
+    fun getTheLastOccurrenceOfWord() {
+        val temStr ="""the black dog followed the black car into the black night"""
+
+        val buildRegExp = RegEx()
+            .group(wordBoundary(RegEx("black"))).searchAnyNot(RegEx().anyLetter().optionalOrMore().groupNumRef(1))
+            .buildRegExp()
+
+        val find = RegEx(buildRegExp.toString())
+            .findAll(temStr)
+
+        assertEquals("""(\bblack\b)(?!.*\1)""", buildRegExp.toString())
+        assertEquals("""[black]""", find.toString())
+    }
+
+
+    @Test
     fun testingWordBoundry() {
         val temStr ="""paris in the the spring"""
 
         val buildRegExp = RegEx()
-            .wordBoundary(RegEx().group(RegEx().letters().oneOrMore()).space().groupNumRef(1)) // (group1)(group2)  \1\2
+            .wordBoundary(group(RegEx().letters().oneOrMore()).space().groupNumRef(1)) // (group1)(group2)  \1\2
             .buildRegExp()
 
         val find = RegEx(buildRegExp.toString())
@@ -49,6 +71,8 @@ class Test {
         val find = RegEx(buildRegExp.toString())
             .findAll(temStr)
 
+        //translation: ?:  = search, .* = I dont know how many characters ahead,  ? = dont be ambitious and read everything
+        //   \\ = get all backslash , {3} only 3
         assertEquals("""^(?:.*?\\){3}""", buildRegExp.toString())
         assertEquals("""[C:\temp\test\]""", find.toString())
 
@@ -82,26 +106,21 @@ class Test {
 
     @Test
     fun testChainExpression() {
-        val separator = RegEx().letter(" -").optional()
-        val areaCodeOpen = RegEx().literal("(").optional()
-        val areaCodeClose = RegEx().literal(")").optional()
-        val ThreeDigits = RegEx().digit().repeat(3)
-        val fourDigits = RegEx().digit().repeat(4)
+        val separator = letter(" -").optional()
+        val areaCodeOpen = literal("(").optional()
+        val areaCodeClose = literal(")").optional()
+        val ThreeDigits = digit().repeat(3)
+        val fourDigits =  digit().repeat(4)
 
         val buildRegExp =
-            RegEx(RegEx().setBetween(areaCodeOpen,ThreeDigits,areaCodeClose))
+            RegEx(setBetween(areaCodeOpen,ThreeDigits,areaCodeClose))
             .range(separator)
             .chain(ThreeDigits)
             .range(separator)
             .chain(fourDigits)
             .buildRegExp()
 
-        val find =
-            RegEx(RegEx().setBetween(areaCodeOpen,ThreeDigits,areaCodeClose))
-            .range(separator)
-            .chain(ThreeDigits)
-            .range(separator)
-            .chain(fourDigits)
+        val find = RegEx(buildRegExp.toString())
             .findAll(temStr2)
 
         assertEquals("""\(?\d{3}\)?[ -?]\d{3}[ -?]\d{4}""", buildRegExp.toString())
@@ -113,19 +132,14 @@ class Test {
 
         val buildRegExp = RegEx()
             .digit().repeat(3)
-            .range(RegEx().letter(" -").optional())
+            .range(letter(" -").optional())
             .digit().repeat(3)
-            .range(RegEx().letter(" -").optional())
+            .range(letter(" -").optional())
             .digit().repeat(4)
             .buildRegExp()
 
-        val find = RegEx()
-            .digit().repeat(3)
-            .range(RegEx().letter(" -").optional())
-            .digit().repeat(3)
-            .range(RegEx().letter(" -").optional())
-            .digit().repeat(4)
-            .findAll(temStr2)
+        val find = RegEx(buildRegExp.toString())
+             .findAll(temStr2)
 
         assertEquals("""\d{3}[ -?]\d{3}[ -?]\d{4}""", buildRegExp.toString())
         assertEquals("""[123-456-7890, 123 456 7890]""", find.toString())

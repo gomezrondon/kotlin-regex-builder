@@ -39,8 +39,20 @@ class RegEx(value: String="" ){
         @JvmStatic   val LETTERS_LOWER_CASE="a-z"
          @JvmStatic  val LETTERS_UPPER_CASE="A-Z"
 
+         fun digit(): RegEx {
+             return RegEx("""\d""")
+         }
+
+         fun letter(letter:String): RegEx {
+             return RegEx(letter)
+         }
+
          fun addToRange(value:RegEx):String {
              return RegEx(value).regExp
+         }
+
+         fun setBetween(start: RegEx, inside: RegEx, end: RegEx): RegEx {
+             return RegEx(start).chain(inside).chain(end)
          }
 
          /**
@@ -53,7 +65,20 @@ class RegEx(value: String="" ){
 
              return RegEx("""[$add]""")
          }
-    }
+
+         fun group(value:RegEx): RegEx {
+             return RegEx("""(${value.regExp})""")
+         }
+
+         fun wordBoundary(value:RegEx): RegEx {
+             return RegEx("""\b${value.regExp}\b""")
+         }
+
+         fun literal(value: String): RegEx {
+             return RegEx("""\$value""")
+         }
+
+    }// end static
 
     init {
         this.regExp = value
@@ -203,6 +228,11 @@ class RegEx(value: String="" ){
 
     fun searchAny(value:RegEx): RegEx {
         regExp += """(?:${value.regExp})"""
+        return this
+    }
+
+    fun searchAnyNot(value:RegEx): RegEx {
+        regExp += """(?!${value.regExp})"""
         return this
     }
 
