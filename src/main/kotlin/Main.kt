@@ -50,6 +50,11 @@ class RegEx(value: String="" ){
         return this
     }
 
+    fun groupNumRef(num: Int): RegEx {
+        regExp += """\$num"""
+        return this
+    }
+
     fun or(): RegEx {
         regExp += """|"""
         return this
@@ -173,6 +178,11 @@ class RegEx(value: String="" ){
      */
     fun ahead(value:RegEx): RegEx {
         regExp += """(?=${value.regExp})"""
+        return this
+    }
+
+    fun wordBoundary(value:RegEx): RegEx {
+        regExp += """\b${value.regExp}\b"""
         return this
     }
 

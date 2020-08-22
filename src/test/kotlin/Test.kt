@@ -16,6 +16,22 @@ class Test {
     """.trimIndent()
 
     @Test
+    fun testingWordBoundry() {
+        val temStr ="""paris in the the spring"""
+
+        val buildRegExp = RegEx()
+            .wordBoundary(RegEx().group(RegEx().letters().oneOrMore()).space().groupNumRef(1)) // (group1)(group2)  \1\2
+            .buildRegExp()
+
+        val find = RegEx(buildRegExp.toString())
+            .findAll(temStr)
+
+        assertEquals("""\b(\w+)\s\1\b""", buildRegExp.toString())
+        assertEquals("""[the the]""", find.toString())
+    }
+
+
+    @Test
     fun getFomBeginingUptoAcharacter() {
 //        Desde el inicio hasta la N ocurrencia de un caracters
 //        ^(?:.*?\\){3}
