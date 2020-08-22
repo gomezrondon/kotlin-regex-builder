@@ -4,16 +4,140 @@ import org.junit.jupiter.api.Test;
 
 class Test {
 
-
-    @Test
-    fun findWordThe() {
-
-        val temStr = """
+    val temStr = """
         the fat cat ran down The street.
         it was searching for a mouse to eat.
     """.trimIndent()
 
+    val temStr2 = """
+        123-456-7890
+        123 456 7890
+        (123) 456 7890
+    """.trimIndent()
+
+
+    @Test
+    fun testChainExpression() {
+        val separator = RegEx().letter(" -").optional()
+        val areaCodeOpen = RegEx().literal("(").optional()
+        val areaCodeClose = RegEx().literal(")").optional()
+        val ThreeDigits = RegEx().digit().repeat(3)
+        val fourDigits = RegEx().digit().repeat(4)
+
+        val buildRegExp =
+            RegEx(RegEx().setBetween(areaCodeOpen,ThreeDigits,areaCodeClose))
+            .range(separator)
+            .chain(ThreeDigits)
+            .range(separator)
+            .chain(fourDigits)
+            .buildRegExp()
+
+        val find =
+            RegEx(RegEx().setBetween(areaCodeOpen,ThreeDigits,areaCodeClose))
+            .range(separator)
+            .chain(ThreeDigits)
+            .range(separator)
+            .chain(fourDigits)
+            .findAll(temStr2)
+
+        assertEquals("""\(?\d{3}\)?[ -?]\d{3}[ -?]\d{4}""", buildRegExp.toString())
+        assertEquals("""[123-456-7890, 123 456 7890, (123) 456 7890]""", find.toString())
+    }
+
+    @Test
+    fun validatingTelephonesNumbers() {
+
         val buildRegExp = RegEx()
+            .digit().repeat(3)
+            .range(RegEx().letter(" -").optional())
+            .digit().repeat(3)
+            .range(RegEx().letter(" -").optional())
+            .digit().repeat(4)
+            .buildRegExp()
+
+        val find = RegEx()
+            .digit().repeat(3)
+            .range(RegEx().letter(" -").optional())
+            .digit().repeat(3)
+            .range(RegEx().letter(" -").optional())
+            .digit().repeat(4)
+            .findAll(temStr2)
+
+        assertEquals("""\d{3}[ -?]\d{3}[ -?]\d{4}""", buildRegExp.toString())
+        assertEquals("""[123-456-7890, 123 456 7890]""", find.toString())
+    }
+
+    @Test
+    fun testLookAhead() {
+
+        val buildRegExp = RegEx()
+            .anyLetter()
+            .ahead("at")
+            .buildRegExp()
+
+        val find = RegEx()
+            .anyLetter()
+            .ahead("at")
+            .findAll(temStr)
+
+        assertEquals(""".(?=at)""", buildRegExp.toString())
+        assertEquals("""[f, c, e]""", find.toString())
+    }
+
+    @Test
+    fun testLookBehind() {
+
+        val buildRegExp = RegEx()
+            .behind(RegEx().range("tT").letter("he"))
+            .anyLetter()
+            .buildRegExp()
+
+        val find = RegEx()
+            .behind(RegEx().range("tT").letter("he"))
+            .anyLetter()
+            .findAll(temStr)
+
+        assertEquals("""(?<=[tT]he).""", buildRegExp.toString())
+        assertEquals("""[ ,  ]""", find.toString())
+    }
+
+
+    @Test
+    fun findLastPeriodAtTheEnd() {
+
+        val buildRegExp = RegEx()
+            .endWith(RegEx().literal("."))
+            .buildRegExp()
+
+        val find = RegEx()
+            .endWith(RegEx().literal("."))
+            .findAll(temStr)
+
+        assertEquals("""\.$""", buildRegExp.toString())
+        assertEquals("""[., .]""", find.toString())
+    }
+
+    @Test
+    fun findWordTheThatRepeats() {
+
+        val buildRegExp = RegEx()
+            .group(RegEx("t").or().letter("e").or().letter("r"))
+            .repeat(2,3)
+            .buildRegExp()
+
+        val find = RegEx()
+            .group(RegEx("t").or().letter("e").or().letter("r"))
+            .repeat(2,3)
+            .findAll(temStr)
+
+        assertEquals("""(t|e|r){2,3}""", buildRegExp.toString())
+        assertEquals("""[tre, et]""", find.toString())
+    }
+
+    @Test
+    fun findWordThe() {
+
+          val buildRegExp = RegEx()
             .group(RegEx("t").or().letter("T"))
             .letter("he")
             .buildRegExp()
