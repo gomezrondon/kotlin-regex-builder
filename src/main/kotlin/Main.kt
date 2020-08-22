@@ -8,13 +8,16 @@ fun main() {
     val term = """
         123-456-7890
         123 456 7890
+        (123) 456 7890
     """.trimIndent()
     val separator = RegEx().letter(" -").optional()
+    val areaCodeOpen = RegEx().literal("(").optional()
+    val areaCodeClose = RegEx().literal(")").optional()
     val ThreeDigits = RegEx().digit().repeat(3)
     val fourDigits = RegEx().digit().repeat(4)
 
     val find =
-            RegEx(ThreeDigits)
+            RegEx(RegEx().setBetween(areaCodeOpen,ThreeDigits,areaCodeClose))
             .range(separator)
             .chain(ThreeDigits)
             .range(separator)
@@ -22,7 +25,8 @@ fun main() {
             .printReg()
             .findAll(term)
     println(find)
-//    \d{3}[ -?]\d{3}[ -?]\d{4}
+//       \d{3}[ -?]\d{3}[ -?]\d{4}
+ //   \(?\d{3}\)?[ -?]\d{3}[ -?]\d{4}
 //    [123-456-7890, 123 456 7890]
 }
 
@@ -185,11 +189,16 @@ class RegEx(value: String="" ){
         return this
     }
 
-    fun between(from: String, to: String ): RegEx {
+    fun setBetween(start: RegEx, inside: RegEx, end: RegEx): RegEx {
+        regExp += RegEx(start).chain(inside).chain(end).regExp
+        return this
+    }
+
+/*    fun between(from: String, to: String ): RegEx {
         regExp = """(?<=$from)$bucarTodo"""
         regExp += """(?=$to)"""
         return this
-    }
+    }*/
 
 
     fun find(term: String):String {
