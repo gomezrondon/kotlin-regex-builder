@@ -17,6 +17,32 @@ class Test {
 
 
     @Test
+    fun validateURLs() {
+        val temStr = """
+            https://www.google.com
+            http://coreyms.com
+            https://youtube.com
+        """.trimIndent()
+
+        val buildRegExp = RegEx()
+            .letter("http").letter("s").optional()
+            .letter("://")
+            .group(RegEx("www").literal(".")).optional()
+            .letters().moreThanOne()
+            .literal(".")
+            .letters().moreThanOne()
+            .buildRegExp()
+
+        val find = RegEx(buildRegExp.toString())
+            .findAll(temStr)
+
+        assertEquals("""https?://(www\.)?\w+\.\w+""", buildRegExp.toString())
+        assertEquals("""[https://www.google.com, http://coreyms.com, https://youtube.com]""", find.toString())
+
+    }
+
+
+    @Test
     fun testChainExpression() {
         val separator = RegEx().letter(" -").optional()
         val areaCodeOpen = RegEx().literal("(").optional()
