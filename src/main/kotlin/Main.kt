@@ -10,15 +10,15 @@ fun main() {
         123 456 7890
     """.trimIndent()
     val separator = RegEx().letter(" -").optional()
+    val ThreeDigits = RegEx().digit().repeat(3)
+    val fourDigits = RegEx().digit().repeat(4)
 
-    val TreeDigits = RegEx()
-            .digit().repeat(3)
-
-    val find = RegEx(TreeDigits)
+    val find =
+            RegEx(ThreeDigits)
             .range(separator)
-            .chain(TreeDigits)
+            .chain(ThreeDigits)
             .range(separator)
-            .digit().repeat(4)
+            .chain(fourDigits)
             .printReg()
             .findAll(term)
     println(find)
