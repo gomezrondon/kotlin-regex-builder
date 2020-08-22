@@ -32,7 +32,6 @@ class RegEx(value: String="" ){
     constructor(value2: RegEx) : this(value2.regExp )
 
    private var regExp=""
-   private val bucarTodo= ".*"
    private val LETTERS_LOWER_CASE="a-z"
    private val LETTERS_UPPER_CASE="A-Z"
    private val DIGITS="0-9"
@@ -136,12 +135,6 @@ class RegEx(value: String="" ){
         return this
     }
 
-//    fun word(): RegEx {
-//        letters()
-//        regExp += """+"""
-//        return this
-//    }
-
     fun moreThanOne(): RegEx {
         regExp += """+"""
         return this
@@ -188,19 +181,17 @@ class RegEx(value: String="" ){
         return this
     }
 
-/*    fun between(from: String, to: String ): RegEx {
-        regExp = """(?<=$from)$bucarTodo"""
-        regExp += """(?=$to)"""
+    fun searchBetween(star: RegEx, end: RegEx): RegEx {
+        regExp = behind(star)
+            .anyLetter().optionalOrMore()
+            .ahead(end).regExp
         return this
-    }*/
-
+    }
 
     fun find(term: String):String {
         val value = regExp.toRegex(RegexOption.MULTILINE).find(term)!!.value
         return value
     }
-
-    //.findAll(temStr).map { it.value }
 
     fun findAll(term: String): List<String> {
         val value = regExp.toRegex(RegexOption.MULTILINE).findAll(term).map { it.value }.toList()

@@ -192,7 +192,24 @@ class Test {
 
 
     @Test
-    fun getValueBetweenParentesis() {
+    fun getValueBetweenParenthesis_2() {
+        val temStr = "implementing('this is what i want');"
+
+        val  buildRegExp =  RegEx()
+            .searchBetween(RegEx("'"),RegEx("'"))
+            .buildRegExp()
+
+        val find = RegEx()
+            .searchBetween(RegEx("'"),RegEx("'"))
+            .find(temStr)
+
+
+        assertEquals("""(?<=').*(?=')""", buildRegExp.toString())
+        assertEquals("""this is what i want""", find)
+    }
+
+    @Test
+    fun getValueBetweenParenthesis() {
       val temStr = "implementing('this is what i want');"
 
       val  buildRegExp =  RegEx().behind("'")
