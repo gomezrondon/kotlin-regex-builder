@@ -1,4 +1,6 @@
 
+
+import RegEx.Companion.addToRange
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test;
 
@@ -126,6 +128,36 @@ class Test {
 
         assertEquals("""\d{3}[ -?]\d{3}[ -?]\d{4}""", buildRegExp.toString())
         assertEquals("""[123-456-7890, 123 456 7890]""", find.toString())
+    }
+
+
+    @Test
+    fun testLookAhead_2() {
+        // match any word that ends with a coma
+        val temStr = """
+            "Man is his own star; and the soul that can
+            Render an honest and a perfect man,
+            Commands all light, all influence, all fate;
+            Nothing to him falls early or too late.
+            Our acts our angels are, or good or ill,
+            Our fatal shadows that walk by us still."
+               Epilogue to Beaumont and Fletcher's Honest Man's Fortune
+            Cast the bantling on the rocks,
+            Suckle him with the she-wolf's teat"
+            Wintered with the hawk and fox,
+        """.trimIndent()
+
+
+        val buildRegExp = RegEx()
+            .wordBoundary(RegEx().range(RegEx.LETTERS_UPPER_CASE + RegEx.LETTERS_LOWER_CASE + addToRange(RegEx("'"))).oneOrMore())
+            .ahead(",")
+            .buildRegExp()
+
+        val find = RegEx(buildRegExp.toString())
+            .findAll(temStr)
+
+        assertEquals("""\b[A-Za-z']+\b(?=,)""", buildRegExp.toString())
+        assertEquals("""[man, light, influence, are, ill, rocks, fox]""", find.toString())
     }
 
     @Test

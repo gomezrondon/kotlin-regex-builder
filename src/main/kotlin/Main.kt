@@ -32,9 +32,17 @@ class RegEx(value: String="" ){
     constructor(value2: RegEx) : this(value2.regExp )
 
    private var regExp=""
-   private val LETTERS_LOWER_CASE="a-z"
-   private val LETTERS_UPPER_CASE="A-Z"
+
    private val DIGITS="0-9"
+
+     companion object {
+        @JvmStatic   val LETTERS_LOWER_CASE="a-z"
+         @JvmStatic  val LETTERS_UPPER_CASE="A-Z"
+
+         fun addToRange(value:RegEx):String {
+             return RegEx(value).regExp
+         }
+    }
 
     init {
         this.regExp = value
@@ -77,6 +85,8 @@ class RegEx(value: String="" ){
         range(RegEx().letter(value))
         return this
     }
+
+
 
     /**
      * for more complex values
