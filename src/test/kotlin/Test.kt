@@ -5,6 +5,27 @@ import org.junit.jupiter.api.Test;
 class Test {
 
 
+    @Test
+    fun findWordThe() {
+
+        val temStr = """
+        the fat cat ran down The street.
+        it was searching for a mouse to eat.
+    """.trimIndent()
+
+        val buildRegExp = RegEx()
+            .group(RegEx("t").or().letter("T"))
+            .letter("he")
+            .buildRegExp()
+
+        val find = RegEx()
+            .group(RegEx("t").or().letter("T"))
+            .letter("he")
+            .findAll(temStr)
+
+        assertEquals("""(t|T)he""", buildRegExp.toString())
+        assertEquals("""[the, The]""", find.toString())
+    }
 
 
     @Test
