@@ -15,6 +15,25 @@ class Test {
         (123) 456 7890
     """.trimIndent()
 
+    @Test
+    fun getFomBeginingUptoAcharacter() {
+//        Desde el inicio hasta la N ocurrencia de un caracters
+//        ^(?:.*?\\){3}
+
+        val temStr ="""C:\temp\test\kotlin-js\something\more"""
+
+        val buildRegExp = RegEx()
+            .startWith(RegEx().searchAny(RegEx().anyLetter().optionalOrMore().optional().literal("""\""")))
+            .repeat(3)
+            .buildRegExp()
+
+        val find = RegEx(buildRegExp.toString())
+            .findAll(temStr)
+
+        assertEquals("""^(?:.*?\\){3}""", buildRegExp.toString())
+        assertEquals("""[C:\temp\test\]""", find.toString())
+
+    }
 
     @Test
     fun validateURLs() {

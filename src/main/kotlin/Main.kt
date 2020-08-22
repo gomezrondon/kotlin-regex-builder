@@ -176,6 +176,11 @@ class RegEx(value: String="" ){
         return this
     }
 
+    fun searchAny(value:RegEx): RegEx {
+        regExp += """(?:${value.regExp})"""
+        return this
+    }
+
     fun setBetween(start: RegEx, inside: RegEx, end: RegEx): RegEx {
         regExp += RegEx(start).chain(inside).chain(end).regExp
         return this
