@@ -136,11 +136,11 @@ class RegEx(value: String="" ){
         return this
     }
 
-    fun word(): RegEx {
-        letters()
-        regExp += """+"""
-        return this
-    }
+//    fun word(): RegEx {
+//        letters()
+//        regExp += """+"""
+//        return this
+//    }
 
     fun moreThanOne(): RegEx {
         regExp += """+"""
@@ -235,22 +235,6 @@ class RegEx(value: String="" ){
 }
 
 
-//    val temStr = "implementing('this is what i want');"
-//    val regExp = """(?<=').*(?=')""".toRegex(RegexOption.MULTILINE)
-//    regExp.findAll(temStr).map { it.value }.forEach { println(it) }
-//
-//    val value = regExp.find(temStr)!!.value
-//    println(value)
-
-//    val find = regEx().from("'").to("'").find(temStr)
-//    println(find)
-//---------------
-//    val temStr2 = "9991233 Main St."
-//    val find = regEx().digit()
-//            //.repeat(1, 5)
-//            .repeat(5)
-//            .space().word().space().word().explicit(".").find(temStr2)
-//    println(find)
 //---------------
 /*    val temStr2 = """
         the fat cat ran down the street.
