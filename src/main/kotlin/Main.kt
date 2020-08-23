@@ -39,6 +39,10 @@ class RegEx(value: String="" ){
         @JvmStatic   val LETTERS_LOWER_CASE="a-z"
          @JvmStatic  val LETTERS_UPPER_CASE="A-Z"
 
+         fun anyLetter(): RegEx {
+             return RegEx(""".""")
+         }
+
          fun digit(): RegEx {
              return RegEx("""\d""")
          }
@@ -49,6 +53,10 @@ class RegEx(value: String="" ){
 
          fun addToRange(value:RegEx):String {
              return RegEx(value).regExp
+         }
+
+         fun addToRange(value:String):RegEx {
+             return RegEx(value)
          }
 
          fun setBetween(start: RegEx, inside: RegEx, end: RegEx): RegEx {
@@ -243,7 +251,7 @@ class RegEx(value: String="" ){
 
     fun searchBetween(star: RegEx, end: RegEx): RegEx {
         regExp = behind(star)
-            .anyLetter().optionalOrMore()
+            .anyLetter().ceroOrMore()
             .ahead(end).regExp
         return this
     }
@@ -272,7 +280,7 @@ class RegEx(value: String="" ){
         return this
     }
 
-    fun optionalOrMore(): RegEx {
+    fun ceroOrMore(): RegEx {
         regExp += """*"""
         return this
     }

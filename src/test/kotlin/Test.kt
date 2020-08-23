@@ -1,6 +1,8 @@
 
 
+import RegEx.Companion.LETTERS_LOWER_CASE
 import RegEx.Companion.addToRange
+import RegEx.Companion.anyLetter
 import RegEx.Companion.digit
 import RegEx.Companion.group
 import RegEx.Companion.letter
@@ -24,12 +26,34 @@ class Test {
         (123) 456 7890
     """.trimIndent()
 
+
+    @Test
+    fun validateAPassWord() {
+        val temStr ="""&hbs7SR*l418""" //^(?=.*\d)(?=.*[a-z])(?=.*[\w_])
+
+        val lookAhead = RegEx().ahead( anyLetter().ceroOrMore().digit()) //^(?=.*\d)
+                                     .ahead(anyLetter().ceroOrMore().range(addToRange(LETTERS_LOWER_CASE))) // (?=.*[a-z])
+                                     .ahead( anyLetter().ceroOrMore().range(RegEx().letters().letter("_"))) //(?=.*[\w_])
+
+        val buildRegExp = RegEx()
+                .startWith(lookAhead)
+                .endWith(anyLetter().repeat(6, 12))
+                .buildRegExp()
+
+        val find = RegEx(buildRegExp.toString())
+                .findAll(temStr)
+
+        assertEquals("""^(?=.*\d)(?=.*[a-z])(?=.*[\w_]).{6,12}${'$'}""", buildRegExp.toString())
+         assertEquals("""[&hbs7SR*l418]""", find.toString())
+    }
+
+
     @Test
     fun getTheLastOccurrenceOfWord() {
         val temStr ="""the black dog followed the black car into the black night"""
 
         val buildRegExp = RegEx()
-            .group(wordBoundary(RegEx("black"))).searchAnyNot(RegEx().anyLetter().optionalOrMore().groupNumRef(1))
+            .group(wordBoundary(RegEx("black"))).searchAnyNot(RegEx().anyLetter().ceroOrMore().groupNumRef(1))
             .buildRegExp()
 
         val find = RegEx(buildRegExp.toString())
@@ -64,7 +88,7 @@ class Test {
         val temStr ="""C:\temp\test\kotlin-js\something\more"""
 
         val buildRegExp = RegEx()
-            .startWith(RegEx().searchAny(RegEx().anyLetter().optionalOrMore().optional().literal("""\""")))
+            .startWith(RegEx().searchAny(RegEx().anyLetter().ceroOrMore().optional().literal("""\""")))
             .repeat(3)
             .buildRegExp()
 
@@ -321,12 +345,12 @@ class Test {
       val temStr = "implementing('this is what i want');"
 
       val  buildRegExp =  RegEx().behind("'")
-            .anyLetter().optionalOrMore()
+            .anyLetter().ceroOrMore()
             .ahead("'")
           .buildRegExp()
 
         val find = RegEx().behind("'")
-            .anyLetter().optionalOrMore()
+            .anyLetter().ceroOrMore()
             .ahead("'")
             .find(temStr)
 
