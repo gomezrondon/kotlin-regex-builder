@@ -1,15 +1,17 @@
 
 
-import RegEx.Companion.LETTERS_LOWER_CASE
-import RegEx.Companion.addToRange
-import RegEx.Companion.anyLetter
-import RegEx.Companion.digit
-import RegEx.Companion.group
-import RegEx.Companion.letter
-import RegEx.Companion.literal
-import RegEx.Companion.range
-import RegEx.Companion.setBetween
-import RegEx.Companion.wordBoundary
+import com.gomezrondon.RegEx
+import com.gomezrondon.RegEx.static.LETTERS_LOWER_CASE
+import com.gomezrondon.RegEx.static.LETTERS_UPPER_CASE
+import com.gomezrondon.RegEx.static.addToRange
+import com.gomezrondon.RegEx.static.anyLetter
+import com.gomezrondon.RegEx.static.digit
+import com.gomezrondon.RegEx.static.group
+import com.gomezrondon.RegEx.static.letter
+import com.gomezrondon.RegEx.static.literal
+import com.gomezrondon.RegEx.static.range
+import com.gomezrondon.RegEx.static.setBetween
+import com.gomezrondon.RegEx.static.wordBoundary
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test;
 
@@ -26,6 +28,21 @@ class Test {
         (123) 456 7890
     """.trimIndent()
 
+
+    @Test
+    fun findMultipleSpaces() {
+        val temStr ="""hola   mundo  para todos""" //^(?=.*\d)(?=.*[a-z])(?=.*[\w_])
+
+         val buildRegExp = RegEx()
+                .group(RegEx().space().oneOrMore())
+                .buildRegExp()
+
+        val find = RegEx(buildRegExp.toString())
+                .replaceAll(temStr," ")
+
+        assertEquals("""(\s+)""", buildRegExp.toString())
+        assertEquals("""hola mundo para todos""", find.toString())
+    }
 
     @Test
     fun validateAPassWord() {
@@ -188,7 +205,7 @@ class Test {
 
 
         val buildRegExp = RegEx()
-            .wordBoundary(range(RegEx.LETTERS_UPPER_CASE , RegEx.LETTERS_LOWER_CASE , addToRange(RegEx("'"))).oneOrMore())
+            .wordBoundary(range(LETTERS_UPPER_CASE , LETTERS_LOWER_CASE , addToRange(RegEx("'"))).oneOrMore())
             .ahead(",")
             .buildRegExp()
 
@@ -319,7 +336,7 @@ class Test {
             .literal(".")
             .find(temStr)
 
-        assertEquals("""91233 Main St.""", find)
+        assertEquals("""91233 Main St.""", find2)
     }
 
 

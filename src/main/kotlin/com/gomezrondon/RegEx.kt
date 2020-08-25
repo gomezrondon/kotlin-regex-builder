@@ -1,28 +1,30 @@
+package com.gomezrondon
+
+import com.gomezrondon.RegEx.static.LETTERS_LOWER_CASE
+import com.gomezrondon.RegEx.static.LETTERS_UPPER_CASE
 
 
-
-
-fun main() {
-
-    //---------------
-   val term = """
-        some.email@gmail.com
-        1254pepepe@yahoo.edu
-        corpoService@ivm.net
-    """.trimIndent()
-
-    val find = RegEx()
-            .anyAtoZLetter().oneOrMore()
-            .letter("@")
-            .anyAtoZLetter().oneOrMore()
-            .literal(".")
-            .group(RegEx("com").or().letter("edu").or().letter("net"))
-            .printReg()
-            .findAll(term)
-    println(find)
-//    [a-zA-Z]+@[a-zA-Z]+\.(com|edu|net)
-//    [email@gmail.com, pepepe@yahoo.edu, corpoService@ivm.net]
-}
+//fun main() {
+//
+//    //---------------
+//   val term = """
+//        some.email@gmail.com
+//        1254pepepe@yahoo.edu
+//        corpoService@ivm.net
+//    """.trimIndent()
+//
+//    val find = RegEx()
+//            .anyAtoZLetter().oneOrMore()
+//            .letter("@")
+//            .anyAtoZLetter().oneOrMore()
+//            .literal(".")
+//            .group(RegEx("com").or().letter("edu").or().letter("net"))
+//            .printReg()
+//            .findAll(term)
+//    println(find)
+////    [a-zA-Z]+@[a-zA-Z]+\.(com|edu|net)
+////    [email@gmail.com, pepepe@yahoo.edu, corpoService@ivm.net]
+//}
 
 /**
  * build a regexp that find elements between to values
@@ -35,9 +37,11 @@ class RegEx(value: String="" ){
 
    private val DIGITS="0-9"
 
-     companion object {
-        @JvmStatic   val LETTERS_LOWER_CASE="a-z"
-         @JvmStatic  val LETTERS_UPPER_CASE="A-Z"
+     object static{
+        const  val LETTERS_LOWER_CASE="a-z"
+         const val LETTERS_UPPER_CASE="A-Z"
+
+
 
          fun anyLetter(): RegEx {
              return RegEx(""".""")
@@ -51,11 +55,11 @@ class RegEx(value: String="" ){
              return RegEx(letter)
          }
 
-         fun addToRange(value:RegEx):String {
+         fun addToRange(value: RegEx):String {
              return RegEx(value).regExp
          }
 
-         fun addToRange(value:String):RegEx {
+         fun addToRange(value:String): RegEx {
              return RegEx(value)
          }
 
@@ -74,11 +78,11 @@ class RegEx(value: String="" ){
              return RegEx("""[$add]""")
          }
 
-         fun group(value:RegEx): RegEx {
+         fun group(value: RegEx): RegEx {
              return RegEx("""(${value.regExp})""")
          }
 
-         fun wordBoundary(value:RegEx): RegEx {
+         fun wordBoundary(value: RegEx): RegEx {
              return RegEx("""\b${value.regExp}\b""")
          }
 
@@ -92,12 +96,12 @@ class RegEx(value: String="" ){
         this.regExp = value
     }
 
-    fun chain(value:RegEx): RegEx {
+    fun chain(value: RegEx): RegEx {
         regExp += value.regExp
         return this
     }
 
-    fun group(value:RegEx): RegEx {
+    fun group(value: RegEx): RegEx {
         regExp += """(${value.regExp})"""
         return this
     }
@@ -112,12 +116,12 @@ class RegEx(value: String="" ){
         return this
     }
 
-    fun startWith(value:RegEx): RegEx {
+    fun startWith(value: RegEx): RegEx {
         regExp += """^${value.regExp}"""
         return this
     }
 
-    fun endWith(value:RegEx): RegEx {
+    fun endWith(value: RegEx): RegEx {
         regExp += """${value.regExp}$"""
         return this
     }
@@ -129,7 +133,7 @@ class RegEx(value: String="" ){
     /**
      * for more complex values
      */
-    fun range(value:RegEx): RegEx {
+    fun range(value: RegEx): RegEx {
         regExp += """[${value.regExp}]"""
         return this
     }
@@ -145,7 +149,7 @@ class RegEx(value: String="" ){
     }
 
     fun anyAtoZLetter(): RegEx {
-        regExp += RegEx().range(RegEx().letter(LETTERS_LOWER_CASE+LETTERS_UPPER_CASE)).regExp
+        regExp += RegEx().range(RegEx().letter(LETTERS_LOWER_CASE + LETTERS_UPPER_CASE)).regExp
         return this
     }
 
@@ -193,12 +197,12 @@ class RegEx(value: String="" ){
         return this
     }
 
-    fun repeat(start: Int, end:Int) : RegEx{
+    fun repeat(start: Int, end:Int) : RegEx {
         regExp += """{$start,$end}"""
         return this
     }
 
-    fun repeat(number: Int ) : RegEx{
+    fun repeat(number: Int ) : RegEx {
         regExp += """{$number}"""
         return this
     }
@@ -208,7 +212,7 @@ class RegEx(value: String="" ){
         return this
     }
 
-    fun behind(value:RegEx): RegEx {
+    fun behind(value: RegEx): RegEx {
         regExp = """(?<=${value.regExp})"""
         return this
     }
@@ -224,22 +228,22 @@ class RegEx(value: String="" ){
     /**
      * for more complex values
      */
-    fun ahead(value:RegEx): RegEx {
+    fun ahead(value: RegEx): RegEx {
         regExp += """(?=${value.regExp})"""
         return this
     }
 
-    fun wordBoundary(value:RegEx): RegEx {
+    fun wordBoundary(value: RegEx): RegEx {
         regExp += """\b${value.regExp}\b"""
         return this
     }
 
-    fun searchAny(value:RegEx): RegEx {
+    fun searchAny(value: RegEx): RegEx {
         regExp += """(?:${value.regExp})"""
         return this
     }
 
-    fun searchAnyNot(value:RegEx): RegEx {
+    fun searchAnyNot(value: RegEx): RegEx {
         regExp += """(?!${value.regExp})"""
         return this
     }
@@ -259,6 +263,14 @@ class RegEx(value: String="" ){
     fun find(term: String):String {
         val value = regExp.toRegex(RegexOption.MULTILINE).find(term)!!.value
         return value
+    }
+
+
+    fun replaceAll(text:String, newValue: String): String{
+        val toRegex = regExp.toRegex(RegexOption.MULTILINE)
+        val replace = text.replace(toRegex, newValue)
+
+        return replace
     }
 
     fun findAll(term: String): List<String> {
