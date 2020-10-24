@@ -13,6 +13,7 @@ import com.gomezrondon.RegEx.static.range
 import com.gomezrondon.RegEx.static.setBetween
 import com.gomezrondon.RegEx.static.wordBoundary
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test;
 
 class Test {
@@ -29,9 +30,54 @@ class Test {
     """.trimIndent()
 
 
+
+    //^([aeiou])(.*\1)$
+    @Test
+    @DisplayName("validate word that start with vowel  and end with the same vowel  ")
+    fun findWord() {
+        val temStr ="""acomotrrrra"""
+
+        val range = RegEx().startWith(RegEx().group(range("aeiou")))
+
+        val buildRegExp = RegEx()
+            .startWith(RegEx().group(range("aeiou")))
+            .endWith(group(RegEx().anyLetter().ceroOrMore().literal("1")))
+            .buildRegExp()
+
+        val find =
+                RegEx(buildRegExp.toString())
+                        .findAll(temStr)
+
+        assertEquals("""^([aeiou])(.*\1)$""", buildRegExp.toString())
+        assertEquals("""[acomotrrrra]""", find.toString() )
+    }
+
+
+
+    @Test
+    @DisplayName("fin text between single quote")
+    fun findTextBtwQuotes() {
+        val temStr ="""hola   'first Name' todo 'para' todos 'other'"""
+
+        val range = RegEx().startWith(RegEx("'"))
+
+        val buildRegExp = RegEx()
+                .letter("'")
+                .group(range(addToRange(range)).oneOrMore())
+                .letter("'")
+                .buildRegExp()
+
+        val find =
+                RegEx(buildRegExp.toString())
+                        .findAll(temStr)
+
+        assertEquals("""'([^']+)'""", buildRegExp.toString())
+        assertEquals("""['first Name', 'para', 'other']""", find.toString() )
+    }
+
     @Test
     fun findMultipleSpaces() {
-        val temStr ="""hola   mundo  para todos""" //^(?=.*\d)(?=.*[a-z])(?=.*[\w_])
+        val temStr ="""hola   mundo  para todos"""
 
          val buildRegExp = RegEx()
                 .group(RegEx().space().oneOrMore())
