@@ -29,7 +29,22 @@ class Test {
         (123) 456 7890
     """.trimIndent()
 
+    @Test
+    @DisplayName("finds the 1st bar (\"bar\" with \"foo\" before it and \"bar\" after it)")
+    fun testFindFirstBar() { //(?<=foo)bar(?=bar)
+        val temStr ="""foobarbarfoo"""
 
+        val buildRegExp = RegEx().behind("foo").letter("bar").ahead("bar")
+            .printReg()
+            .buildRegExp()
+
+        val find =
+            RegEx(buildRegExp.toString())
+                .findAll(temStr)
+
+        assertEquals("""(?<=foo)bar(?=bar)""", buildRegExp.toString())
+        assertEquals("""[bar]""", find.toString() )
+    }
 
     //^([aeiou])(.*\1)$
     @Test
