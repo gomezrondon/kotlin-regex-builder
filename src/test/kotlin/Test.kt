@@ -28,6 +28,28 @@ class Test {
         123 456 7890
         (123) 456 7890
     """.trimIndent()
+    
+    
+    @Test
+    @DisplayName("finds values between 2 limits")
+    fun findSomething() {
+        val temStr =""" plugins { id 'org.jetbrains.kotlin.jvm' version '1.4.0' } group 'com.gomezrondon' version '1.0-SNAPSHOT' }"""
+
+        val buildRegExp = RegEx()
+            .behind(RegEx().letter("plugins").space().literal("{")) //(?<=plugins\s\{)
+            .anyLetter().ceroOrMore()                                          //.*
+            .optional()                                                        // ? dont be greedy and stop at the first occurrence
+            .ahead(RegEx().literal("}"))                                 // (?=\})
+            .printReg()
+            .buildRegExp()
+
+        val find = RegEx(buildRegExp.toString())
+            .findAll(temStr)
+
+        assertEquals("""(?<=plugins\s\{).*?(?=\})""", buildRegExp.toString())
+        assertEquals("""[ id 'org.jetbrains.kotlin.jvm' version '1.4.0' ]""", find.toString())
+    }
+    
 
     @Test
     @DisplayName("finds the 1st bar (\"bar\" with \"foo\" before it and \"bar\" after it)")
