@@ -29,7 +29,41 @@ class Test {
         (123) 456 7890
     """.trimIndent()
     
-    
+ 
+ 
+     /*
+    bar(?=bar)     finds the 1st bar ("bar" which has "bar" after it)
+    bar(?!bar)     finds the 2nd bar ("bar" which does not have "bar" after it)
+    (?<=foo)bar    finds the 1st bar ("bar" which has "foo" before it)
+    (?<!foo)bar    finds the 2nd bar ("bar" which does not have "foo" before it)
+    (?:.*?\\)     search slash \
+    */
+    @Test
+    @DisplayName("finds each plugins")
+    fun findEachPlugins() {
+        val temStr ="""id 'base' id 'java' id 'idea' id 'eclipse' id "org.springframework.boot" version "2.3.3.RELEASE" id 'io.spring.dependency-management' version '1.0.9.RELEASE' """.trimIndent()
+
+        val buildRegExp = RegEx()
+            .letter("id").space().oneOrMore() //id\s+
+            .anyLetter().ceroOrMore().optional()   //.*?
+            .ahead(RegEx().space())                //(?=\s)
+            .group(RegEx().space().oneOrMore()     // \s+
+                .letter("version").space()   //version\s
+                .group(RegEx().range(RegEx().letter("'").letter("\""))) // (['"])
+                .anyLetter().ceroOrMore().optional()            //.*?
+                .searchAny(RegEx(RegEx().groupNumRef(2)))  //(?:\2)
+            ).optional()  // ?
+            .printReg()
+            .buildRegExp()
+
+        val find = RegEx(buildRegExp.toString())
+            .findAll(temStr)
+
+        assertEquals("""id\s+.*?(?=\s)(\s+version\s(['"]).*?(?:\2))?""", buildRegExp.toString())
+        assertEquals("""[id 'base', id 'java', id 'idea', id 'eclipse', id "org.springframework.boot" version "2.3.3.RELEASE", id 'io.spring.dependency-management' version '1.0.9.RELEASE']""", find.toString())
+    }
+ 
+ 
     @Test
     @DisplayName("finds values between 2 limits")
     fun findSomething() {
