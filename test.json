@@ -92,6 +92,25 @@
             "regex":"version:\\s'[^']*'"
           }
         ]
+      },
+      {
+        "tag": "test",
+        "detect": ["(?<=test\\s\\{).*?(?=\\})"],
+        "get": [
+          {
+            "tag": "name",
+            "regex": "\\w+"
+          }
+        ]
+      },{
+        "tag": "jar",
+        "detect": ["(?<=jar\\s\\{).*?(?=\\})"],
+        "get": [
+          {
+            "tag": "main-class",
+            "regex": "(?<='Main-Class':)\\s?'[^']*'"
+          }
+        ]
       }
 
     ]

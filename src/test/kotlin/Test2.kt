@@ -20,8 +20,8 @@ class Test2 {
     @DisplayName("find beginning and end of brackets")
     fun findBrackets() {
 
-        val strTest = """plugins { id 'org.jetbrains.kotlin.jvm' version '1.5.20' id 'application' } group = 'com.gomezrondon' version = '1.0-SNAPSHOT' repositories { mavenCentral() maven { url 'https://alphacephei.com/maven/' } } dependencies { implementation group: 'net.java.dev.jna', name: 'jna', version: '5.7.0' implementation group: 'com.alphacephei', name: 'vosk', version: '0.3.30+' implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '1.3.5' } """
-
+        val strTest = """plugins { id 'org.jetbrains.kotlin.jvm' version '1.5.20' id 'application' } group = 'com.gomezrondon' version = '1.0-SNAPSHOT' repositories { mavenCentral() maven { url 'https://alphacephei.com/maven/' } } dependencies { implementation group: 'net.java.dev.jna', name: 'jna', version: '5.7.0' implementation group: 'com.alphacephei', name: 'vosk', version: '0.3.30+' implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '1.3.5' } test { useJUnitPlatform() } jar { manifest { attributes 'Main-Class': 'com.gomezrondon.RegEx' } // This line of code recursively collects and copies all of a project's files // and adds them to the JAR itself. One can extend this task, to skip certain // files or particular types at will from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } } }
+"""
         var count = 0
 
         for (char in strTest) {
@@ -70,6 +70,22 @@ class Test2 {
                 implementation group: 'com.alphacephei', name: 'vosk', version: '0.3.30+'
                 implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '1.3.5'
 
+            }
+            
+            test {
+                useJUnitPlatform()
+            }
+
+
+            jar {
+                manifest {
+                    attributes 'Main-Class': 'com.gomezrondon.RegEx'
+                }
+
+                // This line of code recursively collects and copies all of a project's files
+                // and adds them to the JAR itself. One can extend this task, to skip certain
+                // files or particular types at will
+                from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
             }
         """.trimIndent()
 
