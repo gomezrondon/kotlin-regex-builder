@@ -1,0 +1,73 @@
+{
+  "template-name": "build gradle",
+  "version": 1.0,
+  "extension": "gradle",
+
+  "program": {
+    "item": [
+      {
+        "tag": "group",
+        "get": [
+          {
+            "tag": "name",
+            "regex": "\\sgroup\\s'.*?'"
+          }
+        ]
+      },
+      {
+        "tag": "version",
+        "get": [
+          {
+            "tag": "name",
+            "regex": "\\sversion\\s'.*?'"
+          }
+        ]
+      },
+      {
+        "tag": "tasks",
+        "get": [
+          {
+            "optional": false,
+            "tag": "plugins",
+            "detect": "(?<=plugins\\s\\{).*?(?=\\})",
+            "get": [
+              {
+                "tag": "name",
+                "regex": "id\\s+.*?(?=\\s)"
+              },
+              {
+                "tag": "version",
+                "regex": "(\\s+version\\s(['\"]).*?(?:\\2))?"
+              }
+            ]
+          },
+          {
+            "optional": false,
+            "tag": "repositories",
+            "detect": "(?<=repositories\\s\\{).*?(?=\\})",
+            "get": [
+              {
+                "tag": "name",
+                "regex": "\\w+\\(\\)"
+              },{
+                "tag": "repo",
+                "detect": "\\w+\\s\\{.*?(?:\\})",
+                "get":[
+                  {
+                    "tag": "name",
+                    "regex": "\\w+(?=\\s\\{)"
+                  },                  {
+                    "tag": "url",
+                    "regex": "(?<=([\"|'])).*(?=\\1)"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+
+
+}
