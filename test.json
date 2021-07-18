@@ -7,67 +7,93 @@
     "item": [
       {
         "tag": "group",
+        "detect":["group\\s?[=|\\s]\\s?'[^']*'"],
         "get": [
           {
             "tag": "name",
-            "regex": "\\sgroup\\s'.*?'"
+            "regex": "(?<=').*?(?=')"
           }
         ]
       },
       {
         "tag": "version",
+        "detect":["version\\s?[=|\\s]\\s?'[^']*'"],
         "get": [
           {
             "tag": "name",
-            "regex": "\\sversion\\s'.*?'"
+            "regex": "(?<=').*?(?=')"
           }
         ]
       },
       {
-        "tag": "tasks",
+        "tag": "plugins",
+        "optional": false,
+        "detect": ["(?<=plugins\\s\\{).*?(?=\\})"],
         "get": [
           {
-            "optional": false,
-            "tag": "plugins",
-            "detect": "(?<=plugins\\s\\{).*?(?=\\})",
+            "tag": "name",
+            "regex": "(?<=id)\\s+.*?(?=\\s)"
+          },{
+            "tag": "version",
+            "regex": "(\\s+version\\s(['\"]).*?(?:\\2))?"
+          }
+        ]
+      },
+      {
+        "tag": "repositories",
+        "optional": false,
+        "detect": ["(?<=repositories\\s\\{).*?(?=\\}#9#)"],
+        "get": [
+           {
+            "tag": "repositories",
             "get": [
               {
                 "tag": "name",
-                "regex": "id\\s+.*?(?=\\s)"
-              },
-              {
-                "tag": "version",
-                "regex": "(\\s+version\\s(['\"]).*?(?:\\2))?"
+                "regex": "\\w+(?=\\()"
               }
             ]
           },
           {
-            "optional": false,
             "tag": "repositories",
-            "detect": "(?<=repositories\\s\\{).*?(?=\\})",
+            "optional": false,
+            "detect": "\\w+(?=\\s\\{).*?(?:\\})",
             "get": [
               {
                 "tag": "name",
-                "regex": "\\w+\\(\\)"
+                "regex": "\\w+(?=\\s\\{)"
+
               },{
-                "tag": "repo",
-                "detect": "\\w+\\s\\{.*?(?:\\})",
-                "get":[
-                  {
-                    "tag": "name",
-                    "regex": "\\w+(?=\\s\\{)"
-                  },                  {
-                    "tag": "url",
-                    "regex": "(?<=([\"|'])).*(?=\\1)"
-                  }
-                ]
+                "tag": "url",
+                "regex": "(?<=([\"|'])).*(?=\\1)"
               }
             ]
           }
         ]
+      },
+      {
+        "tag": "dependencies",
+        "optional": false,
+        "detect":["(?<=dependencies\\s\\{).*?(?=\\})","\\w+\\s?\\(?(?:\").*?(?=\")"],
+        "get": [
+          {
+            "tag": "type",
+            "regex": "\\w+(?=[\\s|\\(])"
+         },
+          {
+            "tag": "group",
+            "regex":"group:\\s'[^']*'"
+          },
+          {
+            "tag": "name",
+            "regex":"name:\\s'[^']*'"
+          },
+          {
+            "tag": "version",
+            "regex":"version:\\s'[^']*'"
+          }
+        ]
       }
+
     ]
   }
-
-
 }
