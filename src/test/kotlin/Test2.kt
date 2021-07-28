@@ -1,6 +1,6 @@
 import com.gomezrondon.RegEx
 import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Test
 
 class Test2 {
 
@@ -14,12 +14,12 @@ class Test2 {
 
         for (char in strTest) {
 
-            if (char.equals('{')) {
+            if (char == '{') {
                 count++
             }
 
             print(char)
-            if (count > 0 && char.equals('}')) {
+            if (count > 0 && char == '}') {
                 count--
 
                 if (count == 0) {
@@ -43,7 +43,7 @@ class Test2 {
 //        val term ="_plugins { id 'org.jetbrains.kotlin.jvm' version '1.4.21' id 'io.spring.dependency-management' version '1.0.10.RELEASE'  } " //length = 29 //(7, 17, "PERSON")
         val line ="plugins { id ' org.jetbrains.kotlin.jvm ' version ' 1.4.21 ' id ' io.spring.dependency-management ' version ' 1.0.10.RELEASE '  }" //length = 29 //(7, 17, "PERSON")
 
-        val term = listOf<String>("plugins","id ' org.jetbrains.kotlin.jvm '","version ' 1.4.21 '","id ' io.spring.dependency-management '","version ' 1.0.10.RELEASE '")
+        val term = listOf("plugins","id ' org.jetbrains.kotlin.jvm '","version ' 1.4.21 '","id ' io.spring.dependency-management '","version ' 1.0.10.RELEASE '")
 //(0, 7,"PLUGIN"),(10, 41,"PLUGID"),(42, 60,"PLUGVERSION"),(61, 99,"PLUGID"),(100, 126,"PLUGVERSION")
         term.forEach {
             val indexOf = line.indexOf(it)
